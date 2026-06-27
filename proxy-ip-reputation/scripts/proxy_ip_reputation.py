@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Collect proxy exit IP and reputation evidence.
+"""采集代理出口 IP 和信誉分析证据。
 
-This script avoids API keys and uses public endpoints with short timeouts.
-It prints JSON so an agent can produce a human-readable report.
+脚本不依赖 API Key，只使用公开查询接口，并设置较短超时时间。
+输出 JSON，方便 Agent 基于证据生成可读分析报告。
 """
 
 from __future__ import annotations
@@ -151,12 +151,14 @@ def collect_ip_reputation(ip: str, proxy: str | None) -> dict[str, Any]:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Collect proxy IP reputation evidence as JSON.")
-    parser.add_argument("--current", action="store_true", help="Detect current system/env proxy and current exit IP.")
-    parser.add_argument("--ip", help="Inspect a specific IP address.")
-    parser.add_argument("--proxy", help="Use a specific proxy URL, e.g. http://127.0.0.1:7897.")
-    parser.add_argument("--repeats", type=int, default=5, help="Number of exit IP samples for current/proxy checks.")
-    parser.add_argument("--json", action="store_true", help="Print JSON. This is the default output.")
+    parser = argparse.ArgumentParser(description="以 JSON 形式采集代理 IP 信誉分析证据。", add_help=False)
+    parser._optionals.title = "选项"
+    parser.add_argument("-h", "--help", action="help", help="显示帮助信息并退出。")
+    parser.add_argument("--current", action="store_true", help="检测当前系统/终端代理和当前出口 IP。")
+    parser.add_argument("--ip", help="检测指定 IP 地址。")
+    parser.add_argument("--proxy", help="使用指定代理 URL，例如 http://127.0.0.1:7897。")
+    parser.add_argument("--repeats", type=int, default=5, help="当前出口/代理出口的 IP 采样次数。")
+    parser.add_argument("--json", action="store_true", help="输出 JSON。这也是默认输出格式。")
     args = parser.parse_args()
 
     detected = detect_proxy() if args.current or not args.ip else {}
